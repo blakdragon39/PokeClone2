@@ -29,24 +29,21 @@ public class PlayerController : MonoBehaviour
             input.y = Input.GetAxisRaw("Vertical");
 
             if (input.x != 0) input.y = 0;
-            
+
             if (input != Vector2.zero)
             {
-                animator.SetFloat(moveXId, input.x);
-                animator.SetFloat(moveYId, input.y);
-                
                 var targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.y += input.y;
-                
+
                 if (IsWalkable(new Vector3(targetPos.x, targetPos.y)))
                 {
                     StartCoroutine(Move(targetPos));
                 }
             }
         }
-        
-        animator.SetBool(isMovingId, isMoving);
+
+        Animate();
     }
 
     private IEnumerator Move(Vector3 targetPos)
@@ -66,5 +63,16 @@ public class PlayerController : MonoBehaviour
     private bool IsWalkable(Vector3 targetPos)
     {
         return Physics2D.OverlapBox(targetPos, new Vector2(.5f, .5f), 0, solidObjectsLayer) == null;
+    }
+
+    private void Animate()
+    {
+        if (input != Vector2.zero)
+        {
+            animator.SetFloat(moveXId, input.x);
+            animator.SetFloat(moveYId, input.y);
+        }
+
+        animator.SetBool(isMovingId, input != Vector2.zero);
     }
 }
