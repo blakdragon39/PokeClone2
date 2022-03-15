@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
     public LayerMask solidObjectsLayer;
+    public LayerMask encounterLayer;
 
     private bool isMoving;
     private Vector2 input;
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
     public void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void Update()
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
-                if (IsWalkable(new Vector3(targetPos.x, targetPos.y)))
+                if (!OnTileInLayer(targetPos, solidObjectsLayer))
                 {
                     StartCoroutine(Move(targetPos));
                 }
@@ -58,11 +59,8 @@ public class PlayerController : MonoBehaviour
 
         transform.position = targetPos;
         isMoving = false;
-    }
 
-    private bool IsWalkable(Vector3 targetPos)
-    {
-        return Physics2D.OverlapBox(targetPos, new Vector2(.5f, .5f), 0, solidObjectsLayer) == null;
+        CheckForEncounters();
     }
 
     private void Animate()
@@ -74,5 +72,18 @@ public class PlayerController : MonoBehaviour
         }
 
         animator.SetBool(isMovingId, input != Vector2.zero);
+    }
+
+    private void CheckForEncounters()
+    {
+        if (OnTileInLayer(transform.position, encounterLayer))
+        {
+            Debug.Log("in the grass!");
+        }
+    }
+
+    private bool OnTileInLayer(Vector2 position, LayerMask layer)
+    {
+        return Physics2D.OverlapBox(position, new Vector2(0.5f, 0.5f), 0, layer) != null;
     }
 }
