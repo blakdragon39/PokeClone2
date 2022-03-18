@@ -4,7 +4,8 @@ using UnityEngine;
 public class EnemyBase : ScriptableObject
 {
     [SerializeField] private Sprite sprite;
-    
+    [SerializeField] private string name;
+
     [SerializeField] private int maxHealth;
     [SerializeField] private int attack;
     [SerializeField] private int defence;

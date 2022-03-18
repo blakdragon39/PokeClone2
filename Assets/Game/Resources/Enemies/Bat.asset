@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bat
   m_EditorClassIdentifier: 
   sprite: {fileID: -7409678193281308084, guid: 10404ef2a5db36c4d8f3cc20643a509e, type: 3}
+  name: Bat
   maxHealth: 5
   attack: 5
   defence: 3

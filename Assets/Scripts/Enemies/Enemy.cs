@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Enemy
 {
-    private EnemyBase Base { get; set; }
+    public EnemyBase Base { get; set; }
     
-    private int HP { get; set; }
+    public int HP { get; set; }
     
     public Enemy(EnemyBase eBase)
     {
