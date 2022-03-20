@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     public float moveSpeed;
     public LayerMask solidObjectsLayer;
     public LayerMask encounterLayer;
@@ -15,25 +14,20 @@ public class PlayerController : MonoBehaviour
     private readonly int moveYId = Animator.StringToHash("moveY");
     private readonly int isMovingId = Animator.StringToHash("isMoving");
 
-    public void Awake()
-    {
+    public void Awake() {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void Update()
-    {
-        if (!isMoving)
-        {
+    public void Update() {
+        if (!isMoving) {
             SetInput();
 
-            if (input != Vector2.zero)
-            {
+            if (input != Vector2.zero) {
                 var targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
-                if (!OnTileInLayer(targetPos, solidObjectsLayer))
-                {
+                if (!OnTileInLayer(targetPos, solidObjectsLayer)) {
                     StartCoroutine(Move(targetPos));
                 }
             }
@@ -42,20 +36,17 @@ public class PlayerController : MonoBehaviour
         Animate();
     }
 
-    private void SetInput()
-    {
+    private void SetInput() {
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
 
         if (input.x != 0) input.y = 0;
     }
 
-    private IEnumerator Move(Vector3 targetPos)
-    {
+    private IEnumerator Move(Vector3 targetPos) {
         isMoving = true;
 
-        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
-        {
+        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon) {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             yield return null;
         }
@@ -66,10 +57,8 @@ public class PlayerController : MonoBehaviour
         CheckForEncounters();
     }
 
-    private void Animate()
-    {
-        if (input != Vector2.zero)
-        {
+    private void Animate() {
+        if (input != Vector2.zero) {
             animator.SetFloat(moveXId, input.x);
             animator.SetFloat(moveYId, input.y);
         }
@@ -77,16 +66,13 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(isMovingId, input != Vector2.zero);
     }
 
-    private void CheckForEncounters()
-    {
-        if (OnTileInLayer(transform.position, encounterLayer))
-        {
+    private void CheckForEncounters() {
+        if (OnTileInLayer(transform.position, encounterLayer)) {
             // todo
         }
     }
 
-    private bool OnTileInLayer(Vector2 position, LayerMask layer)
-    {
+    private bool OnTileInLayer(Vector2 position, LayerMask layer) {
         return Physics2D.OverlapBox(position, new Vector2(0.5f, 0.5f), 0, layer) != null;
     }
 }

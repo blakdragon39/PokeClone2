@@ -1,13 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPStats : MonoBehaviour
-{
+public class HPStats : MonoBehaviour {
     [SerializeField] private Text hpText;
     [SerializeField] private GameObject currentHealthBar;
 
-    public void SetHealth(int currentHealth, int maxHealth)
-    {
+    public void SetHealth(int currentHealth, int maxHealth) {
         hpText.text = $"{currentHealth}/{maxHealth}";
 
         var normalizedHealth = (float) maxHealth / currentHealth;

@@ -1,8 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "enemy", menuName = "Create new enemy")]
-public class EnemyBase : ScriptableObject
-{
+public class EnemyBase : ScriptableObject {
     [SerializeField] private Sprite sprite;
     [SerializeField] private string name;
 
@@ -13,7 +12,7 @@ public class EnemyBase : ScriptableObject
     [SerializeField] private EnemyType type;
 
     public Sprite Sprite => sprite;
-    
+
     public int MaxHealth => maxHealth;
 
     public int Attack => attack;
@@ -25,8 +24,7 @@ public class EnemyBase : ScriptableObject
     public EnemyType Type => type;
 }
 
-public enum EnemyType
-{
+public enum EnemyType {
     Undead,
     Magic,
     Monster

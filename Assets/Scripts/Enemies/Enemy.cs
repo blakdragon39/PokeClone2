@@ -1,13 +1,11 @@
 using UnityEngine;
 
-public class Enemy
-{
+public class Enemy {
     public EnemyBase Base { get; set; }
-    
+
     public int HP { get; set; }
-    
-    public Enemy(EnemyBase eBase)
-    {
+
+    public Enemy(EnemyBase eBase) {
         Base = eBase;
         HP = eBase.MaxHealth;
     }
