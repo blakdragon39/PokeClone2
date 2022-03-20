@@ -9,7 +9,6 @@ public class EnemyUnit : MonoBehaviour
 
     public void Setup()
     {
-        Debug.Log("Setting up EnemyUnit");
         var enemy = new Enemy(_base);
         
         image.sprite = _base.Sprite;

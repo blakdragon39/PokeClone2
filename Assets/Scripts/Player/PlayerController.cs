@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
     {
         if (OnTileInLayer(transform.position, encounterLayer))
         {
-            Debug.Log("in the grass!");
+            // todo
         }
     }
 
