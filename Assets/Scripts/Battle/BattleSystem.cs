@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 enum BattleStage {
-    PreBattle
+    PreBattle, InBattle
 }
 
 public class BattleSystem : MonoBehaviour {
@@ -11,6 +10,7 @@ public class BattleSystem : MonoBehaviour {
     [SerializeField] private EnemyUnit enemyUnitFront;
 
     [SerializeField] private BattleOptions preBattleOptions;
+    [SerializeField] private BattleOptions inBattleOptions;
 
     private BattleStage battleStage;
     private int selectedOption;
@@ -24,10 +24,17 @@ public class BattleSystem : MonoBehaviour {
 
     private void Update() {
         if (battleStage == BattleStage.PreBattle) {
-            HandlePreBattleSelection();
+            HandleOptionSelection(preBattleOptions);
+            HandlePreBattleAdvance();
+            preBattleOptions.gameObject.SetActive(true);
+            inBattleOptions.gameObject.SetActive(false);
+            preBattleOptions.SetSelectedOption(selectedOption);
+        } else if (battleStage == BattleStage.InBattle) {
+            HandleOptionSelection(inBattleOptions);
+            inBattleOptions.gameObject.SetActive(true);
+            preBattleOptions.gameObject.SetActive(false);
+            inBattleOptions.SetSelectedOption(selectedOption);
         }
-
-        preBattleOptions.SetSelectedOption(selectedOption);
     }
 
     private void SetupBattle() {
@@ -36,7 +43,7 @@ public class BattleSystem : MonoBehaviour {
         enemyUnitFront.Setup();
     }
 
-    private void HandlePreBattleSelection() {
+    private void HandleOptionSelection(BattleOptions options) {
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             selectedOption += 1;
         }
@@ -44,10 +51,17 @@ public class BattleSystem : MonoBehaviour {
             selectedOption -= 1;
         }
 
-        if (selectedOption >= preBattleOptions.options.Count) {
-            selectedOption = preBattleOptions.options.Count - 1;
+        if (selectedOption >= options.options.Count) {
+            selectedOption = options.options.Count - 1;
         } else if (selectedOption < 0) {
             selectedOption = 0;
+        }
+    }
+
+    private void HandlePreBattleAdvance() {
+        //todo make sure correct option is selected?
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            battleStage = BattleStage.InBattle;
         }
     }
 }
