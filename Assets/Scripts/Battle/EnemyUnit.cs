@@ -29,7 +29,18 @@ public class EnemyUnit : MonoBehaviour {
         //todo calculate damage
         var newHealth = enemyStats.HPStats.CurrentHealth - 2;
         if (newHealth < 0) newHealth = 0;
-        
-        return enemyStats.HPStats.SetHealthSmooth(newHealth);
+
+        yield return Blink();
+        yield return enemyStats.HPStats.SetHealthSmooth(newHealth);
+    }
+
+    private IEnumerator Blink() {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(.1f);
+        gameObject.SetActive(true);
+        yield return new WaitForSeconds(.1f);
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(.1f);
+        gameObject.SetActive(true);
     }
 }
