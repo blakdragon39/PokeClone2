@@ -1,7 +1,7 @@
 using UnityEngine;
 
 enum BattleStage {
-    PreBattle, InBattle
+    PreBattle, SelectingAttack, SelectingEnemy
 }
 
 public class BattleSystem : MonoBehaviour {
@@ -10,10 +10,12 @@ public class BattleSystem : MonoBehaviour {
     [SerializeField] private EnemyUnit enemyUnitFront;
 
     [SerializeField] private BattleOptions preBattleOptions;
-    [SerializeField] private BattleOptions inBattleOptions;
+    [SerializeField] private BattleOptions attackSelectionOptions;
+    [SerializeField] private BattleOptions enemySelectionOptions;
 
     private BattleStage battleStage;
     private int selectedOption;
+    private int selectedAttackOption;
 
     private void Start() {
         battleStage = BattleStage.PreBattle;
@@ -26,15 +28,24 @@ public class BattleSystem : MonoBehaviour {
         if (battleStage == BattleStage.PreBattle) {
             HandleOptionSelection(preBattleOptions);
             HandlePreBattleAdvance();
-            preBattleOptions.gameObject.SetActive(true);
-            inBattleOptions.gameObject.SetActive(false);
             preBattleOptions.SetSelectedOption(selectedOption);
-        } else if (battleStage == BattleStage.InBattle) {
-            HandleOptionSelection(inBattleOptions);
-            inBattleOptions.gameObject.SetActive(true);
-            preBattleOptions.gameObject.SetActive(false);
-            inBattleOptions.SetSelectedOption(selectedOption);
+        } else if (battleStage == BattleStage.SelectingAttack) {
+            HandleOptionSelection(attackSelectionOptions);
+            HandleAttackSelection();
+            attackSelectionOptions.SetSelectedOption(selectedOption);
+        } else if (battleStage == BattleStage.SelectingEnemy) {
+            HandleOptionSelection(enemySelectionOptions);
+            HandleEnemySelection();
+            enemySelectionOptions.SetSelectedOption(selectedOption);
         }
+        
+        preBattleOptions.gameObject.SetActive(battleStage == BattleStage.PreBattle);
+        attackSelectionOptions.gameObject.SetActive(battleStage == BattleStage.SelectingAttack);
+        enemySelectionOptions.gameObject.SetActive(battleStage == BattleStage.SelectingEnemy);
+        
+        enemyUnitBackLeft.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 0);
+        enemyUnitFront.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 1);
+        enemyUnitBackRight.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 2);
     }
 
     private void SetupBattle() {
@@ -59,9 +70,29 @@ public class BattleSystem : MonoBehaviour {
     }
 
     private void HandlePreBattleAdvance() {
-        //todo make sure correct option is selected?
         if (Input.GetKeyDown(KeyCode.Return)) {
-            battleStage = BattleStage.InBattle;
+            if (selectedOption == 0) {
+                battleStage = BattleStage.SelectingAttack;    
+            } else if (selectedOption == 1) {
+                //todo flee
+            }
+        }
+    }
+
+    private void HandleAttackSelection() {
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            selectedAttackOption = selectedOption;
+            battleStage = BattleStage.SelectingEnemy;
+        }
+    }
+
+    private void HandleEnemySelection() {
+        if (selectedAttackOption == 0) {
+            //magic
+        } else if (selectedAttackOption == 1) {
+            //throw
+        } else if (selectedAttackOption == 2) {
+            //smack
         }
     }
 }
