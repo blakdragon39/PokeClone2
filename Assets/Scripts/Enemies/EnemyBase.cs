@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "enemy", menuName = "Create new enemy")]
 public class EnemyBase : ScriptableObject {
     [SerializeField] private Sprite sprite;
-    [SerializeField] private string name;
+    [SerializeField] private string displayName;
 
     [SerializeField] private int maxHealth;
     [SerializeField] private int attack;
@@ -13,6 +13,8 @@ public class EnemyBase : ScriptableObject {
 
     public Sprite Sprite => sprite;
 
+    public string DisplayName => displayName;
+    
     public int MaxHealth => maxHealth;
 
     public int Attack => attack;

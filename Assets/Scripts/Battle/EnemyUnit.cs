@@ -6,6 +6,9 @@ public enum AttackType { Magic, Smack, Throw }
 
 public class EnemyUnit : MonoBehaviour {
 
+    public EnemyBase EnemyBase => _base;
+    public EnemyStats EnemyStats => enemyStats;
+
     [SerializeField] private EnemyBase _base;
     [SerializeField] private Image image;
     [SerializeField] private GameObject arrow;

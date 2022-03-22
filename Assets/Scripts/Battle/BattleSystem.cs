@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 enum BattleStage {
     Busy, PreBattle, SelectingAttack, SelectingEnemy
@@ -9,7 +10,9 @@ enum BattleStage {
 public class BattleSystem : MonoBehaviour {
     
     [SerializeField] private List<EnemyUnit> enemies;
+    private List<EnemyUnit> defeatedEnemies = new List<EnemyUnit>();
 
+    [SerializeField] private DialogText dialog;
     [SerializeField] private BattleOptions preBattleOptions;
     [SerializeField] private BattleOptions attackSelectionOptions;
     [SerializeField] private BattleOptions enemySelectionOptions;
@@ -119,8 +122,27 @@ public class BattleSystem : MonoBehaviour {
     }
 
     private IEnumerator StartAttack(EnemyUnit unit, AttackType type) {
+        yield return dialog.TypeText($"Attacked the {unit.EnemyBase.DisplayName}");
         battleStage = BattleStage.Busy;
         yield return unit.Attack(type);
+
+        if (unit.EnemyStats.HPStats.CurrentHealth == 0) {
+            yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
+            RemoveAttackableEnemy(unit);
+        }
+
         battleStage = BattleStage.SelectingAttack; //todo move to enemy attack
-    } 
+    }
+
+    private void RemoveAttackableEnemy(EnemyUnit unit) {
+        var index = enemies.IndexOf(unit);
+        
+        enemies.Remove(unit);
+        defeatedEnemies.Add(unit);
+        unit.gameObject.SetActive(false);
+
+        var selectionOption = enemySelectionOptions.options[index];
+        enemySelectionOptions.options.RemoveAt(index);
+        selectionOption.gameObject.SetActive(false);
+    }
 }
