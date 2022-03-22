@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 enum BattleStage {
@@ -6,9 +7,8 @@ enum BattleStage {
 }
 
 public class BattleSystem : MonoBehaviour {
-    [SerializeField] private EnemyUnit enemyUnitBackLeft;
-    [SerializeField] private EnemyUnit enemyUnitBackRight;
-    [SerializeField] private EnemyUnit enemyUnitFront;
+    
+    [SerializeField] private List<EnemyUnit> enemies;
 
     [SerializeField] private BattleOptions preBattleOptions;
     [SerializeField] private BattleOptions attackSelectionOptions;
@@ -26,33 +26,40 @@ public class BattleSystem : MonoBehaviour {
     }
 
     private void Update() {
-        if (battleStage == BattleStage.PreBattle) {
-            HandleOptionSelection(preBattleOptions);
-            HandlePreBattleAdvance();
-            preBattleOptions.SetSelectedOption(selectedOption);
-        } else if (battleStage == BattleStage.SelectingAttack) {
-            HandleOptionSelection(attackSelectionOptions);
-            HandleAttackSelection();
-            attackSelectionOptions.SetSelectedOption(selectedOption);
-        } else if (battleStage == BattleStage.SelectingEnemy) {
-            HandleOptionSelection(enemySelectionOptions);
-            HandleEnemySelection();
-            enemySelectionOptions.SetSelectedOption(selectedOption);
+        switch (battleStage) {
+            case BattleStage.PreBattle:
+                HandleOptionSelection(preBattleOptions);
+                HandlePreBattleAdvance();
+                preBattleOptions.SetSelectedOption(selectedOption);
+                break;
+            case BattleStage.SelectingAttack:
+                HandleOptionSelection(attackSelectionOptions);
+                HandleAttackSelection();
+                attackSelectionOptions.SetSelectedOption(selectedOption);
+                break;
+            case BattleStage.SelectingEnemy:
+                HandleOptionSelection(enemySelectionOptions);
+                HandleEnemySelection();
+                enemySelectionOptions.SetSelectedOption(selectedOption);
+                break;
+            case BattleStage.Busy:
+            default:
+                break;
         }
         
         preBattleOptions.gameObject.SetActive(battleStage == BattleStage.PreBattle);
         attackSelectionOptions.gameObject.SetActive(battleStage == BattleStage.SelectingAttack);
         enemySelectionOptions.gameObject.SetActive(battleStage == BattleStage.SelectingEnemy);
-        
-        enemyUnitBackLeft.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 0);
-        enemyUnitFront.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 1);
-        enemyUnitBackRight.SetArrowVisible(battleStage == BattleStage.SelectingEnemy && selectedOption == 2);
+
+        for (int i = 0; i < enemies.Count; i++) {
+            enemies[i].SetArrowVisible(battleStage == BattleStage.SelectingEnemy && i == selectedOption);
+        }
     }
 
     private void SetupBattle() {
-        enemyUnitBackLeft.Setup();
-        enemyUnitBackRight.Setup();
-        enemyUnitFront.Setup();
+        foreach (var enemy in enemies) {
+            enemy.Setup();
+        }
     }
 
     private void HandleOptionSelection(BattleOptions options) {
@@ -71,53 +78,44 @@ public class BattleSystem : MonoBehaviour {
     }
 
     private void HandlePreBattleAdvance() {
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            if (selectedOption == 0) {
-                battleStage = BattleStage.SelectingAttack;    
-            } else if (selectedOption == 1) {
-                //todo flee
-            }
+        if (!Input.GetKeyDown(KeyCode.Return)) return;
 
-            selectedOption = 0; //todo remember option selection?
+        switch (selectedOption) {
+            case 0:
+                battleStage = BattleStage.SelectingAttack;
+                break;
+            case 1:
+                //todo flee
+                break;
         }
+
+        selectedOption = 0; //todo remember option selection?
     }
 
     private void HandleAttackSelection() {
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            selectedAttackOption = selectedOption;
-            battleStage = BattleStage.SelectingEnemy;
-            selectedOption = 0; //todo remember option selection?
-        }
+        if (!Input.GetKeyDown(KeyCode.Return)) return;
+        
+        selectedAttackOption = selectedOption;
+        battleStage = BattleStage.SelectingEnemy;
+        selectedOption = 0; //todo remember option selection?
     }
 
     private void HandleEnemySelection() {
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            var enemy = enemyUnitBackLeft;
-            var type = AttackType.Magic;
-
-            if (selectedOption == 0) {
-                enemy = enemyUnitBackLeft;
-            }
-            else if (selectedOption == 1) {
-                enemy = enemyUnitFront;
-            }
-            else if (selectedOption == 2) {
-                enemy = enemyUnitBackRight;
-            }
-
-            if (selectedAttackOption == 0) {
-                type = AttackType.Magic;
-            }
-            else if (selectedAttackOption == 1) {
-                type = AttackType.Throw;
-            }
-            else if (selectedAttackOption == 2) {
-                type = AttackType.Smack;
-            }
-
-            StartCoroutine(StartAttack(enemy, type));
-            selectedOption = 0; //todo remember option selection?
+        if (!Input.GetKeyDown(KeyCode.Return)) return;
+        
+        var enemy = enemies[selectedOption];
+        var type = AttackType.Magic;
+        
+        if (selectedAttackOption == 0) {
+            type = AttackType.Magic;
+        } else if (selectedAttackOption == 1) {
+            type = AttackType.Throw;
+        } else if (selectedAttackOption == 2) {
+            type = AttackType.Smack;
         }
+
+        StartCoroutine(StartAttack(enemy, type));
+        selectedOption = 0; //todo remember option selection?
     }
 
     private IEnumerator StartAttack(EnemyUnit unit, AttackType type) {

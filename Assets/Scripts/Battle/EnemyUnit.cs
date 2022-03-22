@@ -25,6 +25,8 @@ public class EnemyUnit : MonoBehaviour {
     public IEnumerator Attack(AttackType type) {
         //todo calculate damage
         var newHealth = enemyStats.HPStats.CurrentHealth - 2;
+        if (newHealth < 0) newHealth = 0;
+        
         return enemyStats.HPStats.SetHealthSmooth(newHealth);
     }
 }

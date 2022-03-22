@@ -4,32 +4,32 @@ using UnityEngine.UI;
 
 public class HPStats : MonoBehaviour {
 
-    public int CurrentHealth => currentHealth;
+    public int CurrentHealth => _currentHealth;
     
     [SerializeField] private Text hpText;
     [SerializeField] private GameObject currentHealthBar;
 
-    private int maxHealth;
-    private int currentHealth;
+    private int _maxHealth;
+    private int _currentHealth;
     
     public void Setup(int maxHealth) {
-        this.maxHealth = maxHealth;
-        currentHealth = maxHealth;
+        _maxHealth = maxHealth;
+        _currentHealth = maxHealth;
         SetHealth(maxHealth);
     }
     
     public void SetHealth(int newHealth) {
-        currentHealth = newHealth;
-        hpText.text = $"{currentHealth}/{maxHealth}";
+        _currentHealth = newHealth;
+        hpText.text = $"{_currentHealth}/{_maxHealth}";
 
-        var normalizedHealth = (float) currentHealth / maxHealth;
+        var normalizedHealth = (float) _currentHealth / _maxHealth;
         currentHealthBar.transform.localScale = new Vector3(normalizedHealth, 1f);
     }
 
     public IEnumerator SetHealthSmooth(int newHealth) {
-        currentHealth = newHealth;
+        _currentHealth = newHealth;
         
-        var normalizedHealth = (float) currentHealth / maxHealth;
+        var normalizedHealth = (float) _currentHealth / _maxHealth;
         var currentScale = currentHealthBar.transform.localScale.x;
         var change = currentScale - normalizedHealth;
 

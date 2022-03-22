@@ -525,7 +525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.00000059604645, y: -23.975}
+  m_AnchoredPosition: {x: 0.00000059604645, y: -23.975006}
   m_SizeDelta: {x: 33.42, y: 47.95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &173492447
@@ -1238,8 +1238,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 619141314}
-  - {fileID: 1556224397}
   - {fileID: 918574981}
+  - {fileID: 1556224397}
   - {fileID: 78539126}
   - {fileID: 408457947}
   m_Father: {fileID: 1711231880}
@@ -2641,7 +2641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -23.975002}
+  m_AnchoredPosition: {x: 0, y: -23.975006}
   m_SizeDelta: {x: 33.42, y: 47.95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &808482636
@@ -2893,11 +2893,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1914397100399930643, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Name
-      value: Front
+      value: Back Right
       objectReference: {fileID: 0}
     - target: {fileID: 1914397100644064158, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Text
-      value: Front
+      value: Back Right
       objectReference: {fileID: 0}
     - target: {fileID: 8116718074352490574, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Pivot.x
@@ -3091,7 +3091,7 @@ RectTransform:
   - {fileID: 1466463664}
   - {fileID: 1767295284}
   m_Father: {fileID: 599935664}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.2341533, y: 1}
@@ -3149,7 +3149,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2, y: -0.000026703}
+  m_AnchoredPosition: {x: -2, y: -0.000030517578}
   m_SizeDelta: {x: -106.76, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921255938
@@ -3778,11 +3778,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1914397100399930643, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Name
-      value: BackRight
+      value: Front
       objectReference: {fileID: 0}
     - target: {fileID: 1914397100644064158, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Text
-      value: Back Right
+      value: Front
       objectReference: {fileID: 0}
     - target: {fileID: 8116718074352490574, guid: d53783d0367fb0d469aa117e9c5de832, type: 3}
       propertyPath: m_Pivot.x
@@ -9407,7 +9407,7 @@ RectTransform:
   - {fileID: 1246536148}
   - {fileID: 879627461}
   m_Father: {fileID: 599935664}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2341533, y: 0}
   m_AnchorMax: {x: 0.5083102, y: 1}
@@ -9576,9 +9576,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d17cbfe64634054bbcabdb0d6cda1fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyUnitBackLeft: {fileID: 918574982}
-  enemyUnitBackRight: {fileID: 78539127}
-  enemyUnitFront: {fileID: 1556224398}
+  enemies:
+  - {fileID: 918574982}
+  - {fileID: 1556224398}
+  - {fileID: 78539127}
   preBattleOptions: {fileID: 1734059782}
   attackSelectionOptions: {fileID: 781546783}
   enemySelectionOptions: {fileID: 438613926}
