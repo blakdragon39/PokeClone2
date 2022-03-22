@@ -1,7 +1,8 @@
+using System.Collections;
 using UnityEngine;
 
 enum BattleStage {
-    PreBattle, SelectingAttack, SelectingEnemy
+    Busy, PreBattle, SelectingAttack, SelectingEnemy
 }
 
 public class BattleSystem : MonoBehaviour {
@@ -76,6 +77,8 @@ public class BattleSystem : MonoBehaviour {
             } else if (selectedOption == 1) {
                 //todo flee
             }
+
+            selectedOption = 0; //todo remember option selection?
         }
     }
 
@@ -83,16 +86,43 @@ public class BattleSystem : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return)) {
             selectedAttackOption = selectedOption;
             battleStage = BattleStage.SelectingEnemy;
+            selectedOption = 0; //todo remember option selection?
         }
     }
 
     private void HandleEnemySelection() {
-        if (selectedAttackOption == 0) {
-            //magic
-        } else if (selectedAttackOption == 1) {
-            //throw
-        } else if (selectedAttackOption == 2) {
-            //smack
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            var enemy = enemyUnitBackLeft;
+            var type = AttackType.Magic;
+
+            if (selectedOption == 0) {
+                enemy = enemyUnitBackLeft;
+            }
+            else if (selectedOption == 1) {
+                enemy = enemyUnitFront;
+            }
+            else if (selectedOption == 2) {
+                enemy = enemyUnitBackRight;
+            }
+
+            if (selectedAttackOption == 0) {
+                type = AttackType.Magic;
+            }
+            else if (selectedAttackOption == 1) {
+                type = AttackType.Throw;
+            }
+            else if (selectedAttackOption == 2) {
+                type = AttackType.Smack;
+            }
+
+            StartCoroutine(StartAttack(enemy, type));
+            selectedOption = 0; //todo remember option selection?
         }
     }
+
+    private IEnumerator StartAttack(EnemyUnit unit, AttackType type) {
+        battleStage = BattleStage.Busy;
+        yield return unit.Attack(type);
+        battleStage = BattleStage.SelectingAttack; //todo move to enemy attack
+    } 
 }
