@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 enum BattleStage {
-    Busy, PreBattle, SelectingAttack, SelectingEnemy
+    Busy, PreBattle, SelectingAttack, SelectingEnemy, EnemyAttack
 }
 
 public class BattleSystem : MonoBehaviour {
-    
+
+    [SerializeField] private PlayerUnit playerUnit;
     [SerializeField] private List<EnemyUnit> enemies;
     private List<EnemyUnit> defeatedEnemies = new List<EnemyUnit>();
 
@@ -44,6 +44,9 @@ public class BattleSystem : MonoBehaviour {
                 HandleOptionSelection(enemySelectionOptions);
                 HandleEnemySelection();
                 enemySelectionOptions.SetSelectedOption(selectedOption);
+                break;
+            case BattleStage.EnemyAttack:
+                StartCoroutine(StartEnemyAttack());
                 break;
             case BattleStage.Busy:
             default:
@@ -92,7 +95,7 @@ public class BattleSystem : MonoBehaviour {
                 break;
         }
 
-        selectedOption = 0; //todo remember option selection?
+        selectedOption = 0;
     }
 
     private void HandleAttackSelection() {
@@ -100,7 +103,7 @@ public class BattleSystem : MonoBehaviour {
         
         selectedAttackOption = selectedOption;
         battleStage = BattleStage.SelectingEnemy;
-        selectedOption = 0; //todo remember option selection?
+        selectedOption = 0;
     }
 
     private void HandleEnemySelection() {
@@ -117,21 +120,24 @@ public class BattleSystem : MonoBehaviour {
             type = AttackType.Smack;
         }
 
-        StartCoroutine(StartAttack(enemy, type));
-        selectedOption = 0; //todo remember option selection?
+        StartCoroutine(AttackEnemy(enemy, type));
+        selectedOption = 0;
     }
 
-    private IEnumerator StartAttack(EnemyUnit unit, AttackType type) {
-        yield return dialog.TypeText($"Attacked the {unit.EnemyBase.DisplayName}");
+    private IEnumerator AttackEnemy(EnemyUnit unit, AttackType type) {
         battleStage = BattleStage.Busy;
+        
+        yield return dialog.TypeText($"Attacked the {unit.EnemyBase.DisplayName}");
         yield return unit.Attack(type);
 
         if (unit.EnemyStats.HPStats.CurrentHealth == 0) {
             yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
             RemoveAttackableEnemy(unit);
         }
+        
+        // todo check if any enemies are left
 
-        battleStage = BattleStage.SelectingAttack; //todo move to enemy attack
+        battleStage = BattleStage.EnemyAttack;
     }
 
     private void RemoveAttackableEnemy(EnemyUnit unit) {
@@ -144,5 +150,18 @@ public class BattleSystem : MonoBehaviour {
         var selectionOption = enemySelectionOptions.options[index];
         enemySelectionOptions.options.RemoveAt(index);
         selectionOption.gameObject.SetActive(false);
+    }
+
+    private IEnumerator StartEnemyAttack() {
+        battleStage = BattleStage.Busy;
+        
+        var enemy = enemies[Random.Range(0, enemies.Count)];
+        
+        yield return dialog.TypeText($"The {enemy.EnemyBase.DisplayName} attacks!");
+        yield return playerUnit.Attack(enemy);
+
+        // todo check if player is defeated
+        
+        battleStage = BattleStage.SelectingAttack;
     }
 }
