@@ -19,6 +19,7 @@ public class PlayerUnit : MonoBehaviour {
 
         yield return Blink();
         yield return hpStats.SetHealthSmooth(newHealth);
+        //todo return damage info
     }
     
     private IEnumerator Blink() {

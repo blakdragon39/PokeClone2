@@ -128,7 +128,7 @@ public class BattleSystem : MonoBehaviour {
         battleStage = BattleStage.Busy;
         
         yield return dialog.TypeText($"Attacked the {unit.EnemyBase.DisplayName}");
-        yield return unit.Attack(type);
+        yield return HandleEnemyAttackResults(unit.Attack(type));
 
         if (unit.EnemyStats.HPStats.CurrentHealth == 0) {
             yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
@@ -163,5 +163,12 @@ public class BattleSystem : MonoBehaviour {
         // todo check if player is defeated
         
         battleStage = BattleStage.SelectingAttack;
+    }
+
+    private IEnumerator HandleEnemyAttackResults(EnemyAttackResults results) {
+        yield return results.Enemy.Blink();
+        yield return results.Enemy.EnemyStats.HPStats.SetHealthSmooth((int) results.NewHealth); // todo casting might be bad here
+        yield return dialog.TypeText($"{results.Enemy.EnemyBase.name} took {results.Damage} damage"); //todo show effectiveness
+        // todo wait?
     }
 }

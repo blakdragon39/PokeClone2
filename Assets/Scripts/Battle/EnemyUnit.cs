@@ -25,16 +25,18 @@ public class EnemyUnit : MonoBehaviour {
         arrow.SetActive(visible);
     }
 
-    public IEnumerator Attack(AttackType type) {
-        //todo calculate damage
-        var newHealth = enemyStats.HPStats.CurrentHealth - 2;
+    public EnemyAttackResults Attack(AttackType type) {
+        var damage = 2f; // todo calculate damage
+        var effectiveness = EnemyBase.GetEffectiveness(type, _base.Type);
+        damage *= EnemyBase.GetEffectivenessMultiplier(effectiveness);
+
+        var newHealth = enemyStats.HPStats.CurrentHealth - damage;
         if (newHealth < 0) newHealth = 0;
 
-        yield return Blink();
-        yield return enemyStats.HPStats.SetHealthSmooth(newHealth);
+        return new EnemyAttackResults(this, damage, newHealth, effectiveness);
     }
 
-    private IEnumerator Blink() {
+    public IEnumerator Blink() {
         gameObject.SetActive(false);
         yield return new WaitForSeconds(.1f);
         gameObject.SetActive(true);
