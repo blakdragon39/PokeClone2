@@ -46,7 +46,7 @@ public class BattleSystem : MonoBehaviour {
                 enemySelectionOptions.SetSelectedOption(selectedOption);
                 break;
             case BattleStage.EnemyAttack:
-                StartCoroutine(StartEnemyAttack());
+                StartCoroutine(AttackEnemy());
                 break;
             case BattleStage.Busy:
             default:
@@ -126,9 +126,13 @@ public class BattleSystem : MonoBehaviour {
 
     private IEnumerator AttackEnemy(EnemyUnit unit, AttackType type) {
         battleStage = BattleStage.Busy;
+        var results = unit.Attack(type);
         
         yield return dialog.TypeText($"Attacked the {unit.EnemyBase.DisplayName}");
-        yield return HandleEnemyAttackResults(unit.Attack(type));
+        yield return results.Enemy.Blink();
+        yield return results.Enemy.EnemyStats.HPStats.SetHealthSmooth((int) results.NewHealth); // todo casting might be bad here
+        yield return dialog.TypeText($"{results.Enemy.EnemyBase.name} took {results.Damage} damage"); //todo show effectiveness
+        // todo wait?
 
         if (unit.EnemyStats.HPStats.CurrentHealth == 0) {
             yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
@@ -152,23 +156,19 @@ public class BattleSystem : MonoBehaviour {
         selectionOption.gameObject.SetActive(false);
     }
 
-    private IEnumerator StartEnemyAttack() {
+    private IEnumerator AttackEnemy() {
         battleStage = BattleStage.Busy;
         
         var enemy = enemies[Random.Range(0, enemies.Count)];
+        var results = playerUnit.Attack(enemy);
         
         yield return dialog.TypeText($"The {enemy.EnemyBase.DisplayName} attacks!");
-        yield return playerUnit.Attack(enemy);
+        yield return playerUnit.Blink();
+        yield return playerUnit.HpStats.SetHealthSmooth((int) results.NewHealth); // todo casting?
+        yield return dialog.TypeText($"You took {results.Damage} damage"); //todo show effectiveness
 
         // todo check if player is defeated
         
         battleStage = BattleStage.SelectingAttack;
-    }
-
-    private IEnumerator HandleEnemyAttackResults(EnemyAttackResults results) {
-        yield return results.Enemy.Blink();
-        yield return results.Enemy.EnemyStats.HPStats.SetHealthSmooth((int) results.NewHealth); // todo casting might be bad here
-        yield return dialog.TypeText($"{results.Enemy.EnemyBase.name} took {results.Damage} damage"); //todo show effectiveness
-        // todo wait?
     }
 }
