@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 enum BattleStage {
     Busy, PreBattle, SelectingAttack, SelectingEnemy, EnemyAttack
 }
 
 public class BattleSystem : MonoBehaviour {
+
+    public event Action<bool> OnBattleEnded;
 
     [SerializeField] private PlayerUnit playerUnit;
     [SerializeField] private List<EnemyUnit> enemies;
@@ -21,14 +25,14 @@ public class BattleSystem : MonoBehaviour {
     private int selectedOption;
     private int selectedAttackOption;
 
-    private void Start() {
+    public void StartBattle() {
         battleStage = BattleStage.PreBattle;
         selectedOption = 0;
 
         SetupBattle();
     }
 
-    private void Update() {
+    public void HandleUpdate() {
         switch (battleStage) {
             case BattleStage.PreBattle:
                 HandleOptionSelection(preBattleOptions);
@@ -91,7 +95,7 @@ public class BattleSystem : MonoBehaviour {
                 battleStage = BattleStage.SelectingAttack;
                 break;
             case 1:
-                //todo flee
+                OnBattleEnded(true);
                 break;
         }
 
@@ -100,6 +104,7 @@ public class BattleSystem : MonoBehaviour {
 
     private void HandleAttackSelection() {
         if (!Input.GetKeyDown(KeyCode.Return)) return;
+        //todo need a way to move backwards!
         
         selectedAttackOption = selectedOption;
         battleStage = BattleStage.SelectingEnemy;
@@ -138,8 +143,10 @@ public class BattleSystem : MonoBehaviour {
             yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
             RemoveAttackableEnemy(unit);
         }
-        
-        // todo check if any enemies are left
+
+        if (enemies.Count == 0) {
+            OnBattleEnded(true);
+        }
 
         battleStage = BattleStage.EnemyAttack;
     }
@@ -167,8 +174,10 @@ public class BattleSystem : MonoBehaviour {
         yield return playerUnit.HpStats.SetHealthSmooth((int) results.NewHealth); // todo casting?
         yield return dialog.TypeText($"You took {results.Damage} damage"); //todo show effectiveness
 
-        // todo check if player is defeated
-        
+        if (results.NewHealth == 0) {
+            OnBattleEnded(false);
+        }
+
         battleStage = BattleStage.SelectingAttack;
     }
 }

@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
+
+    public event Action OnEncounter;
+    
     public float moveSpeed;
     public LayerMask solidObjectsLayer;
     public LayerMask encounterLayer;
@@ -18,7 +22,7 @@ public class PlayerController : MonoBehaviour {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void Update() {
+    public void HandleUpdate() {
         if (!isMoving) {
             SetInput();
 
@@ -68,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 
     private void CheckForEncounters() {
         if (OnTileInLayer(transform.position, encounterLayer)) {
-            // todo
+            OnEncounter();
         }
     }
 

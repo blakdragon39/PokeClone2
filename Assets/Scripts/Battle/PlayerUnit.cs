@@ -18,7 +18,6 @@ public class PlayerUnit : MonoBehaviour {
         var damage = 2;
         var newHealth = hpStats.CurrentHealth - damage;
         if (newHealth < 0) newHealth = 0;
-
         
         return new PlayerAttackResults(damage, newHealth, attacker);
     }
