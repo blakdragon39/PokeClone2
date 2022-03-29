@@ -1,0 +1,5 @@
+﻿- randomly generate attacking enemy party
+- add left/right to enemy selection
+- highlight enemy if attack will be effective?
+- let user cancel selected action and go back to previous menu
+- animate enemies in battle 
