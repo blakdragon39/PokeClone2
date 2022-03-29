@@ -73,10 +73,15 @@ public class BattleSystem : MonoBehaviour {
     }
 
     private void HandleOptionSelection(BattleOptions options) {
-        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+        if (
+            Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.RightArrow) && battleStage == BattleStage.SelectingEnemy
+        ) {
             selectedOption += 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+        } else if (
+            Input.GetKeyDown(KeyCode.UpArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) && battleStage == BattleStage.SelectingEnemy
+        ) {
             selectedOption -= 1;
         }
 
