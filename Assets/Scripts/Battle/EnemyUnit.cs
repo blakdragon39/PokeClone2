@@ -8,16 +8,21 @@ public class EnemyUnit : MonoBehaviour {
 
     public EnemyBase EnemyBase => _base;
     public EnemyStats EnemyStats => enemyStats;
-
-    [SerializeField] private EnemyBase _base;
-    [SerializeField] private Image image;
+    
     [SerializeField] private GameObject arrow;
-    [SerializeField] private EnemyStats enemyStats;
 
-    public void Setup() {
-        var enemy = new Enemy(_base);
+    private EnemyBase _base;
+    private Image image;
+    private EnemyStats enemyStats;
 
-        image.sprite = _base.Sprite;
+    private void Awake() {
+        image = GetComponentInChildren<Image>();
+        enemyStats = GetComponentInChildren<EnemyStats>();
+    }
+
+    public void Setup(Enemy enemy) {
+        _base = enemy.Base;
+        image.sprite = enemy.Base.Sprite;
         enemyStats.Setup(enemy);
     }
 

@@ -1,5 +1,4 @@
-﻿- randomly generate attacking enemy party
-- highlight enemy if attack will be effective?
+﻿- highlight enemy if attack will be effective?
 - let user cancel selected action and go back to previous menu
 - animate enemies in battle 
 - add chance encounter rate in the grass

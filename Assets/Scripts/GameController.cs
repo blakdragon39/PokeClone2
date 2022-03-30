@@ -34,8 +34,10 @@ public class GameController : MonoBehaviour {
         
         mainCamera.gameObject.SetActive(false);
         battleSystem.gameObject.SetActive(true);
-        
-        battleSystem.StartBattle();
+
+        var enemies = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomEnemyParty();
+
+        battleSystem.StartBattle(enemies);
     }
 
     private void EndBattle(bool playerWon) {

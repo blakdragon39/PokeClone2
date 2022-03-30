@@ -25,11 +25,11 @@ public class BattleSystem : MonoBehaviour {
     private int selectedOption;
     private int selectedAttackOption;
 
-    public void StartBattle() {
+    public void StartBattle(List<Enemy> newEnemies) {
         battleStage = BattleStage.PreBattle;
         selectedOption = 0;
 
-        SetupBattle();
+        SetupBattle(newEnemies);
     }
 
     public void HandleUpdate() {
@@ -66,9 +66,17 @@ public class BattleSystem : MonoBehaviour {
         }
     }
 
-    private void SetupBattle() {
-        foreach (var enemy in enemies) {
-            enemy.Setup();
+    private void SetupBattle(List<Enemy> newEnemies) {
+        for (var i = 0; i < enemies.Count; i++) {
+            if (i < newEnemies.Count) {
+                var newEnemy = newEnemies[i];
+                newEnemy.Init();
+                enemies[i].Setup(newEnemy);
+                enemies[i].gameObject.SetActive(true);
+            } else {
+                //todo this adds them to list of defeated enemies as well, when it shouldn't:
+                RemoveAttackableEnemy(enemies[i]);
+            }
         }
     }
 

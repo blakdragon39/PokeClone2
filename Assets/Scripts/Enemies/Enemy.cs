@@ -1,12 +1,14 @@
 using UnityEngine;
 
+[System.Serializable]
 public class Enemy {
-    public EnemyBase Base { get; set; }
+    public EnemyBase Base => _base;
 
     public int HP { get; set; }
 
-    public Enemy(EnemyBase eBase) {
-        Base = eBase;
-        HP = eBase.MaxHealth;
+    [SerializeField] private EnemyBase _base;
+    
+    public void Init() {
+        HP = _base.MaxHealth;
     }
 }
