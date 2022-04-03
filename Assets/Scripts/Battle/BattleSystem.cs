@@ -78,23 +78,28 @@ public class BattleSystem : MonoBehaviour {
         if (!Input.GetKeyDown(KeyCode.Return)) return;
 
         switch (preBattleOptions.SelectedOption) {
-            case 0:
+            case 0: //begin battle
                 battleStage = BattleStage.SelectingAttack;
                 break;
-            case 1:
+            case 1: //run away
                 OnBattleEnded(true);
                 break;
         }
     }
 
     private void HandleAttackSelection() {
-        if (!Input.GetKeyDown(KeyCode.Return)) return;
-        //todo need a way to move backwards!
-        
-        battleStage = BattleStage.SelectingEnemy;
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            battleStage = BattleStage.SelectingEnemy;
+        } else if (Input.GetKeyDown(KeyCode.Backspace)) {
+            battleStage = BattleStage.PreBattle;
+        }
     }
 
     private void HandleEnemySelection() {
+        if (Input.GetKeyDown(KeyCode.Backspace)) {
+            battleStage = BattleStage.SelectingAttack;
+            return;
+        }
         if (!Input.GetKeyDown(KeyCode.Return)) return;
         
         var enemy = enemies[enemySelectionOptions.SelectedOption];
