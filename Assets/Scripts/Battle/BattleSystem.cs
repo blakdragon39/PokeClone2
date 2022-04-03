@@ -22,12 +22,12 @@ public class BattleSystem : MonoBehaviour {
     [SerializeField] private BattleOptions enemySelectionOptions;
 
     private BattleStage battleStage;
-    private int selectedOption;
-    private int selectedAttackOption;
 
     public void StartBattle(List<Enemy> newEnemies) {
         battleStage = BattleStage.PreBattle;
-        selectedOption = 0;
+        preBattleOptions.SetSelectedOption(0);
+        attackSelectionOptions.SetSelectedOption(0);
+        enemySelectionOptions.SetSelectedOption(0);
 
         SetupBattle(newEnemies);
     }
@@ -35,19 +35,13 @@ public class BattleSystem : MonoBehaviour {
     public void HandleUpdate() {
         switch (battleStage) {
             case BattleStage.PreBattle:
-                HandleOptionSelection(preBattleOptions);
                 HandlePreBattleAdvance();
-                preBattleOptions.SetSelectedOption(selectedOption);
                 break;
             case BattleStage.SelectingAttack:
-                HandleOptionSelection(attackSelectionOptions);
                 HandleAttackSelection();
-                attackSelectionOptions.SetSelectedOption(selectedOption);
                 break;
             case BattleStage.SelectingEnemy:
-                HandleOptionSelection(enemySelectionOptions);
                 HandleEnemySelection();
-                enemySelectionOptions.SetSelectedOption(selectedOption);
                 break;
             case BattleStage.EnemyAttack:
                 StartCoroutine(AttackEnemy());
@@ -62,7 +56,7 @@ public class BattleSystem : MonoBehaviour {
         enemySelectionOptions.gameObject.SetActive(battleStage == BattleStage.SelectingEnemy);
 
         for (int i = 0; i < enemies.Count; i++) {
-            enemies[i].SetArrowVisible(battleStage == BattleStage.SelectingEnemy && i == selectedOption);
+            enemies[i].SetArrowVisible(battleStage == BattleStage.SelectingEnemy && i == enemySelectionOptions.SelectedOption);
         }
     }
 
@@ -74,36 +68,16 @@ public class BattleSystem : MonoBehaviour {
                 enemies[i].Setup(newEnemy);
                 enemies[i].gameObject.SetActive(true);
             } else {
-                //todo this adds them to list of defeated enemies as well, when it shouldn't:
+                //todo this adds them to list of defeated enemies as well, when it probably shouldn't:
                 RemoveAttackableEnemy(enemies[i]);
             }
         }
     }
-
-    private void HandleOptionSelection(BattleOptions options) {
-        if (
-            Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.RightArrow) && battleStage == BattleStage.SelectingEnemy
-        ) {
-            selectedOption += 1;
-        } else if (
-            Input.GetKeyDown(KeyCode.UpArrow) ||
-            Input.GetKeyDown(KeyCode.LeftArrow) && battleStage == BattleStage.SelectingEnemy
-        ) {
-            selectedOption -= 1;
-        }
-
-        if (selectedOption >= options.options.Count) {
-            selectedOption = options.options.Count - 1;
-        } else if (selectedOption < 0) {
-            selectedOption = 0;
-        }
-    }
-
+    
     private void HandlePreBattleAdvance() {
         if (!Input.GetKeyDown(KeyCode.Return)) return;
 
-        switch (selectedOption) {
+        switch (preBattleOptions.SelectedOption) {
             case 0:
                 battleStage = BattleStage.SelectingAttack;
                 break;
@@ -111,25 +85,22 @@ public class BattleSystem : MonoBehaviour {
                 OnBattleEnded(true);
                 break;
         }
-
-        selectedOption = 0;
     }
 
     private void HandleAttackSelection() {
         if (!Input.GetKeyDown(KeyCode.Return)) return;
         //todo need a way to move backwards!
         
-        selectedAttackOption = selectedOption;
         battleStage = BattleStage.SelectingEnemy;
-        selectedOption = 0;
     }
 
     private void HandleEnemySelection() {
         if (!Input.GetKeyDown(KeyCode.Return)) return;
         
-        var enemy = enemies[selectedOption];
+        var enemy = enemies[enemySelectionOptions.SelectedOption];
         var type = AttackType.Magic;
-        
+
+        var selectedAttackOption = attackSelectionOptions.SelectedOption;
         if (selectedAttackOption == 0) {
             type = AttackType.Magic;
         } else if (selectedAttackOption == 1) {
@@ -139,7 +110,6 @@ public class BattleSystem : MonoBehaviour {
         }
 
         StartCoroutine(AttackEnemy(enemy, type));
-        selectedOption = 0;
     }
 
     private IEnumerator AttackEnemy(EnemyUnit unit, AttackType type) {
@@ -155,6 +125,7 @@ public class BattleSystem : MonoBehaviour {
         if (unit.EnemyStats.HPStats.CurrentHealth == 0) {
             yield return dialog.TypeText($"{unit.EnemyBase.DisplayName} was defeated!");
             RemoveAttackableEnemy(unit);
+            enemySelectionOptions.SetSelectedOption(0);
         }
 
         if (enemies.Count == 0) {

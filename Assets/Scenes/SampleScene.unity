@@ -1382,6 +1382,8 @@ MonoBehaviour:
   - {fileID: 87145093}
   - {fileID: 2004353710}
   - {fileID: 1097452838}
+  verticalSelection: 1
+  horizontalSelection: 1
 --- !u!224 &438613927
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2859,6 +2861,8 @@ MonoBehaviour:
   - {fileID: 927477947}
   - {fileID: 1741415562}
   - {fileID: 397346232}
+  verticalSelection: 1
+  horizontalSelection: 0
 --- !u!114 &781546784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10463,6 +10467,8 @@ MonoBehaviour:
   options:
   - {fileID: 311734914}
   - {fileID: 12407524}
+  verticalSelection: 1
+  horizontalSelection: 0
 --- !u!1 &1734550651
 GameObject:
   m_ObjectHideFlags: 0
