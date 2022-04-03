@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour {
 
     public event Action CloseMenu;
     
-    public void HandleUpdate() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             CloseMenu();
         }

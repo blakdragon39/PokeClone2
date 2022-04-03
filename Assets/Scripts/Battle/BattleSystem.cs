@@ -32,7 +32,7 @@ public class BattleSystem : MonoBehaviour {
         SetupBattle(newEnemies);
     }
 
-    public void HandleUpdate() {
+    private void Update() {
         switch (battleStage) {
             case BattleStage.PreBattle:
                 HandlePreBattleAdvance();

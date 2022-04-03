@@ -19,11 +19,11 @@ public class PlayerController : MonoBehaviour {
     private readonly int moveYId = Animator.StringToHash("moveY");
     private readonly int isMovingId = Animator.StringToHash("isMoving");
 
-    public void Awake() {
+    private void Awake() {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public void HandleUpdate() {
+    private void Update() {
         if (!isMoving) {
             SetInput();
 
