@@ -18,7 +18,7 @@ public class BattleOptions : MonoBehaviour {
     }
 
     private void Update() {
-        if (!gameObject.activeSelf) return;
+        if (!gameObject.activeSelf) return; //todo is this necessary?
 
         var newSelection = SelectedOption;
         if (
