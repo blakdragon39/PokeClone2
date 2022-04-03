@@ -17,9 +17,9 @@ public class BattleSystem : MonoBehaviour {
     private List<EnemyUnit> defeatedEnemies = new List<EnemyUnit>();
 
     [SerializeField] private DialogText dialog;
-    [SerializeField] private BattleOptions preBattleOptions;
-    [SerializeField] private BattleOptions attackSelectionOptions;
-    [SerializeField] private BattleOptions enemySelectionOptions;
+    [SerializeField] private MenuOptions preBattleOptions;
+    [SerializeField] private MenuOptions attackSelectionOptions;
+    [SerializeField] private MenuOptions enemySelectionOptions;
 
     private BattleStage battleStage;
 

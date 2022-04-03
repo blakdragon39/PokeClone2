@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public event Action OnEncounter;
+    public event Action OpenMenu;
     
     public float moveSpeed;
     public LayerMask solidObjectsLayer;
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour {
                     StartCoroutine(Move(targetPos));
                 }
             }
+
+            CheckMenu();
         }
 
         Animate();
@@ -78,5 +81,11 @@ public class PlayerController : MonoBehaviour {
 
     private bool OnTileInLayer(Vector2 position, LayerMask layer) {
         return Physics2D.OverlapBox(position, new Vector2(0.5f, 0.5f), 0, layer) != null;
+    }
+
+    private void CheckMenu() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            OpenMenu();
+        }
     }
 }

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleOptions : MonoBehaviour {
+public class MenuOptions : MonoBehaviour {
 
     public int SelectedOption { get; private set; }
     
-    public List<BattleOption> options;
+    public List<MenuOption> options;
 
     [SerializeField] private bool verticalSelection;
     [SerializeField] private bool horizontalSelection;
@@ -18,8 +18,6 @@ public class BattleOptions : MonoBehaviour {
     }
 
     private void Update() {
-        if (!gameObject.activeSelf) return; //todo is this necessary?
-
         var newSelection = SelectedOption;
         if (
             verticalSelection && Input.GetKeyDown(KeyCode.DownArrow) || 

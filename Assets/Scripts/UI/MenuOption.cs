@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BattleOption : MonoBehaviour {
+public class MenuOption : MonoBehaviour {
     [SerializeField] private GameObject arrow;
 
     public void SetSelected(bool selected) {

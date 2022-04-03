@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8116718074352490574}
   - component: {fileID: 6619510354004999536}
   m_Layer: 0
-  m_Name: BattleOption
+  m_Name: MenuOption
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,8 +85,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 140.45, y: 0}
-  m_SizeDelta: {x: 259.07, y: 30}
+  m_AnchoredPosition: {x: 125.27, y: 0}
+  m_SizeDelta: {x: 221.12, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1914397100644064159
 CanvasRenderer:
