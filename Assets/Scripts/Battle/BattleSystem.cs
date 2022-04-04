@@ -147,8 +147,8 @@ public class BattleSystem : MonoBehaviour {
         defeatedEnemies.Add(unit);
         unit.gameObject.SetActive(false);
 
-        var selectionOption = enemySelectionOptions.options[index];
-        enemySelectionOptions.options.RemoveAt(index);
+        var selectionOption = enemySelectionOptions.Options[index];
+        enemySelectionOptions.Options.RemoveAt(index);
         selectionOption.gameObject.SetActive(false);
     }
 

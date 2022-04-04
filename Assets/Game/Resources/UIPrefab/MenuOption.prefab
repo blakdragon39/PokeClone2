@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef50c169041cede4189e94f7d81c7186, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  optionPrefab: {fileID: 1914397100399930643}
+  textField: {fileID: 1914397100644064158}
   arrow: {fileID: 1914397100822856382}
 --- !u!1 &1914397100644064152
 GameObject:

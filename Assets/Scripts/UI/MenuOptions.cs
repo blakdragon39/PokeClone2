@@ -3,12 +3,31 @@ using UnityEngine;
 
 public class MenuOptions : MonoBehaviour {
 
+    public List<MenuOption> Options => options;
     public int SelectedOption { get; private set; }
     
-    public List<MenuOption> options;
-
     [SerializeField] private bool verticalSelection;
     [SerializeField] private bool horizontalSelection;
+    
+    [SerializeField] private List<MenuOption> options;
+    [SerializeField] private GameObject optionPrefab;
+
+    public void Init(List<string> newOptions) { //todo map of strings to actions?
+        options = new List<MenuOption>();
+
+        newOptions.ForEach(newOption => {
+            var prefab = Instantiate(optionPrefab);
+            var option = prefab.GetComponent<MenuOption>();
+            
+            option.Init(newOption);
+            prefab.SetActive(true);
+            prefab.transform.SetParent(transform, false);
+
+            options.Add(option);
+        });
+
+        SetSelectedOption(0);
+    }
 
     public void SetSelectedOption(int index) {
         SelectedOption = index;
